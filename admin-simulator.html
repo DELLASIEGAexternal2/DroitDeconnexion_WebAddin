@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8" />
+<title>Simulateur Centre d’administration M365 — Déploiement Add-in (Manifest)</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<style>
+  :root{
+    --accent:#0a68ff; --accent-soft:#e6f0ff; --danger:#e05252; --ok:#138f3e;
+    --card:#fff; --bg:#f5f6f8; --text:#222; --muted:#666;
+  }
+  body{font-family:Segoe UI,Arial,sans-serif;background:var(--bg);margin:0;padding:24px;color:var(--text)}
+  h1{font-size:20px;margin:0 0 12px}
+  .bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+  .step{padding:8px 12px;border-radius:999px;border:1px solid #cfd7e3;background:#fff;color:#333}
+  .step.active{background:var(--accent-soft);border-color:var(--accent);color:#123}
+  .wrap{display:grid;grid-template-columns:1.1fr 1.2fr;gap:16px}
+  .card{background:var(--card);border:1px solid #e2e6ee;border-radius:12px;padding:14px;box-shadow:0 2px 6px rgba(0,0,0,.04)}
+  .title{margin:0 0 8px;font-size:16px}
+  .muted{color:var(--muted);font-size:12px}
+  .row{margin:8px 0}
+  .btn{padding:6px 12px;border:1px solid #c5c5c5;background:#fafafa;border-radius:6px;cursor:pointer;transition:.2s}
+  .btn.primary{border-color:var(--accent);background:var(--accent-soft)}
+  .btn:hover{background:#e8f1ff;border-color:#0078d7;box-shadow:0 0 6px rgba(0,120,215,.3)}
+  input[type="text"]{width:100%;padding:8px;border:1px solid #cfd7e3;border-radius:6px}
+  pre{background:#0b1020;color:#e8f6ff;border-radius:8px;padding:10px;overflow:auto;font-size:12px}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .pill{display:inline-block;padding:2px 8px;border-radius:999px;font-size:12px;border:1px solid #cfd7e3;background:#fff;margin-right:6px}
+  .pill.ok{border-color:#bfe4c9;background:#eefaf1;color:#0c5128}
+  .pill.warn{border-color:#ffd1c9;background:#fff3f0;color:#7a1b12}
+  .check{margin:0;padding:8px 10px;border:1px dashed #cfd7e3;border-radius:8px;background:#fbfcff}
+  iframe{width:380px;height:600px;border:1px solid #ccc;border-radius:10px}
+  .rightCol{display:flex;flex-direction:column;gap:16px}
+</style>
+</head>
+<body>
+  <h1>Simulateur “Integrated apps” — Déploiement d’un Outlook Web Add‑in via <em>manifest.xml</em></h1>
+  <div class="bar">
+    <span class="step active" id="st1">1) Télécharger/URL du manifeste</span>
+    <span class="step" id="st2">2) Validation & Analyse</span>
+    <span class="step" id="st3">3) Sécurité & Gouvernance</span>
+    <span class="step" id="st4">4) Portée & Affectation</span>
+    <span class="step" id="st5">5) Aperçu (Taskpane depuis le manifeste)</span>
+  </div>
+
+  <div class="wrap">
+    <!-- Colonne gauche -->
+    <div class="leftCol">
+      <div class="card">
+        <h2 class="title">1) Charger le manifeste</h2>
+        <div class="row">
+          <label class="btn">
+            📁 Uploader manifest.xml
+            <input type="file" id="manifestFile" accept=".xml" hidden>
+          </label>
+        </div>
+        <div class="row">
+          <div class="muted">…ou indiquer l’URL publique (GitHub RAW conseillé)</div>
+          <input id="manifestUrl" type="text"
+                 placeholder="https://raw.githubusercontent.com/<user>/<repo>/<branch>/path/manifest.xml" />
+          <div class="row">
+            <button class="btn primary" id="btnFetch">Valider et analyser</button>
+          </div>
+          <div class="muted">
+            Astuce : dans GitHub, ouvre ton fichier, clique <b>Raw</b>, puis copie l’URL complète (CORS OK).
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2 class="title">2) Résultats d’analyse</h2>
+        <div id="analysis" class="muted">En attente de chargement du manifeste…</div>
+      </div>
+
+      <div class="card">
+        <h2 class="title">3) Sécurité & Gouvernance (simulation)</h2>
+        <div id="gov"></div>
+      </div>
+
+      <div class="card">
+        <h2 class="title">4) Portée & Affectation (simulation)</h2>
+        <div class="grid">
+          <div>
+            <div class="muted">Qui a accès ?</div>
+            <label><input type="radio" name="scope" value="everyone" checked> Toute l’organisation</label><br/>
+            <label><input type="radio" name="scope" value="groups"> Groupes spécifiques</label><br/>
+            <label><input type="radio" name="scope" value="users"> Utilisateurs spécifiques</label>
+          </div>
+          <div>
+            <div class="muted">Mode</div>
+            <label><input type="radio" name="mode" value="fixed" checked> Assignation fixe</label><br/>
+            <label><input type="radio" name="mode" value="optional"> Optionnel</label>
+          </div>
+        </div>
+        <div class="row">
+          <button class="btn" id="btnSimDeploy">Déployer (simulé)</button>
+          <span id="deployMsg" class="muted"></span>
+        </div>
+        <div class="muted">Dans le vrai Centre d’admin, ces étapes se font via <b>Integrated apps</b>
+          (upload manifeste, affectation utilisateurs/groupes, propagation éventuelle jusqu’à 24 h). <!-- cite -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Colonne droite -->
+    <div class="rightCol">
+      <div class="card">
+        <h2 class="title">5) Aperçu Taskpane (depuis le manifeste)</h2>
+        <div class="row check">
+          <b>Source détectée</b> : <span id="srcUrl" class="muted">—</span>
+          <div class="muted">Le taskpane est chargé <u>après</u> validation du manifeste, via l’URL lue dans le XML.</div>
+        </div>
+        <div class="row">
+          <iframe id="pane" title="Taskpane Preview (simulé)"></iframe>
+        </div>
+        <div class="muted">Ce n’est pas Outlook : on ne teste pas les APIs Office/Outlook, seulement l’UI.</div>
+      </div>
+
+      <div class="card">
+        <h2 class="title">Manifeste (XML) — extrait</h2>
+        <pre id="xmlPreview">// en attente…</pre>
+      </div>
+    </div>
+  </div>
+
+<script>
+  const q = s => document.querySelector(s);
+  const analysisEl = q('#analysis');
+  const govEl = q('#gov');
+  const srcEl = q('#srcUrl');
+  const pane = q('#pane');
+  const xmlPreview = q('#xmlPreview');
+
+  let manifestText = '';
+  let parsed = null;
+
+  function setStep(n){
+    ['#st1','#st2','#st3','#st4','#st5'].forEach((id,i)=> {
+      const el = q(id);
+      if(!el) return;
+      el.classList.toggle('active', i === (n-1));
+    });
+  }
+
+  function xmlToStr(node, max=2000){
+    const s = (new XMLSerializer()).serializeToString(node);
+    return (s.length>max)? s.slice(0,max)+"\n…(tronqué)…" : s;
+  }
+
+  // Helpers robustes avec namespaces
+  function sel(el, path){
+    // try querySelector with localName matches
+    try{
+      const all = el.getElementsByTagName('*');
+      const parts = path.split('/');
+      let cur = el;
+      for(const p of parts){
+        let found = null;
+        for(const node of cur.children){
+          if(node.localName === p) { found = node; break; }
+        }
+        if(!found) return null;
+        cur = found;
+      }
+      return cur;
+    }catch{ return null; }
+  }
+  function getAttr(node, name, def=''){
+    if(!node) return def;
+    return node.getAttribute(name) ?? def;
+  }
+  function getText(node, def=''){
+    if(!node) return def;
+    return node.textContent?.trim() ?? def;
+  }
+
+  function analyze(doc){
+    const OfficeApp = doc.documentElement;
+    const Id = getText(sel(OfficeApp,'Id'));
+    const Version = getText(sel(OfficeApp,'Version'));
+    const ProviderName = getText(sel(OfficeApp,'ProviderName'));
+    const DisplayName = getAttr(sel(OfficeApp,'DisplayName'),'DefaultValue');
+    const Description = getAttr(sel(OfficeApp,'Description'),'DefaultValue');
+
+    // Hosts
+    const hostNode = sel(OfficeApp,'Hosts');
+    let hosts = [];
+    if(hostNode){
+      hosts = Array.from(hostNode.getElementsByTagName('*'))
+                   .filter(n => n.localName==='Host')
+                   .map(n => getAttr(n,'Name'))
+                   .filter(Boolean);
+    }
+
+    // Requirements (Mailbox min version)
+    const reqNode = sel(OfficeApp,'Requirements');
+    let minMailbox = '';
+    if(reqNode){
+      const set = Array.from(reqNode.getElementsByTagName('*'))
+        .find(n => n.localName==='Set' && getAttr(n,'Name')?.toLowerCase()==='mailbox');
+      minMailbox = set ? (getAttr(set,'MinVersion') || '1.1') : '';
+    }
+
+    // Permissions
+    const permNode = sel(OfficeApp,'Permissions');
+    const permission = getText(permNode,'');
+
+    // SourceLocation (FormSettings → DesktopSettings → SourceLocation)
+    let source = '';
+    const fs = sel(OfficeApp,'FormSettings');
+    if(fs){
+      const forms = Array.from(fs.getElementsByTagName('*')).filter(n => n.localName==='Form');
+      for(const f of forms){
+        const ds = sel(f, 'DesktopSettings');
+        const sl = ds ? sel(ds,'SourceLocation') : null;
+        if(sl){
+          source = getAttr(sl,'DefaultValue') || '';
+          if(source) break;
+        }
+      }
+    }
+
+    // VersionOverrides (essentiel pour Outlook commands)
+    const vo = Array.from(OfficeApp.getElementsByTagName('*'))
+      .find(n => n.localName?.toLowerCase().includes('versionoverrides'));
+    let actionInfo = '';
+    if(vo){
+      // essaie d’attraper une URL de taskpane bouton
+      const srcs = Array.from(vo.getElementsByTagName('*'))
+        .filter(n => n.localName==='SourceLocation');
+      const candidate = srcs.find(n => getAttr(n,'DefaultValue'));
+      if(candidate && !source) source = getAttr(candidate,'DefaultValue');
+      actionInfo = `${srcs.length} SourceLocation trouvée(s) dans VersionOverrides`;
+    }
+
+    // Checks
+    const httpsOk = source ? /^https:\/\//i.test(source) : false;
+    const permMap = {
+      'Restricted': {lvl:'Faible',note:'Accès très limité'},
+      'ReadItem': {lvl:'Standard',note:'Lecture item'},
+      'ReadWriteItem': {lvl:'Élevé',note:'Lecture/écriture item'},
+      'ReadWriteMailbox': {lvl:'Très élevé',note:'Lecture/écriture boîte + EWS'}
+    };
+    const permInfo = permMap[permission] || {lvl:'Inconnu',note:'—'};
+
+    return {
+      summary: {Id,Version,ProviderName,DisplayName,Description},
+      hosts, minMailbox, permission, permInfo, source, httpsOk, vo: !!vo, actionInfo
+    };
+  }
+
+  function renderAnalysis(a){
+    const lines = [];
+    lines.push(`<div class="row"><b>${a.summary.DisplayName||'(sans nom)'}</b> — v${a.summary.Version||'?'}</div>`);
+    lines.push(`<div class="row muted">ID : <code>${a.summary.Id||'?'}</code> · Éditeur : ${a.summary.ProviderName||'?'}</div>`);
+    lines.push(`<div class="row">
+        <span class="pill">Hosts : ${a.hosts.join(', ')||'—'}</span>
+        <span class="pill">Mailbox ≥ ${a.minMailbox||'—'}</span>
+        <span class="pill ${a.httpsOk?'ok':'warn'}">Source HTTPS : ${a.httpsOk?'OK':'NON'}</span>
+        <span class="pill">VersionOverrides : ${a.vo?'oui':'non'}</span>
+      </div>`);
+    if(a.source){
+      lines.push(`<div class="row">SourceLocation : <code>${a.source}</code></div>`);
+      srcEl.textContent = a.source;
+      pane.src = a.source; // charge le taskpane APRÈS validation
+      setStep(5);
+    } else {
+      srcEl.textContent = '— non détecté —';
+      pane.removeAttribute('src');
+    }
+    const desc = a.summary.Description || '';
+    if(desc) lines.push(`<div class="row muted">${desc}</div>`);
+    analysisEl.innerHTML = lines.join('\n');
+
+    // Sécurité / Gouvernance
+    govEl.innerHTML = `
+      <div class="row">
+        <b>Permission demandée</b> : <code>${a.permission||'—'}</code>
+        <span class="pill ${a.permission==='ReadWriteMailbox'?'warn':'ok'}">
+          Niveau : ${a.permInfo.lvl}
+        </span>
+        <div class="muted">${a.permInfo.note}</div>
+      </div>
+      <div class="row check">
+        <b>Règles de base (manifest)</b>
+        <ul>
+          <li>HTTPS requis pour toutes les URLs (SourceLocation, icônes, etc.) — <i>${a.httpsOk?'OK':'⚠ Vérifier'}</i></li>
+          <li>Host doit inclure <code>Mailbox</code> pour Outlook — <i>${a.hosts.includes('Mailbox')?'OK':'⚠ Manquant'}</i></li>
+          <li>Requirement set <code>Mailbox</code> min : <b>${a.minMailbox||'—'}</b></li>
+        </ul>
+      </div>
+    `;
+    setStep(3);
+  }
+
+  async function loadFromUrl(url){
+    const res = await fetch(url, {mode:'cors'});
+    if(!res.ok) throw new Error('HTTP '+res.status);
+    return await res.text();
+  }
+
+  async function processManifest(text){
+    manifestText = text;
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(text, 'application/xml');
+    const err = doc.querySelector('parsererror');
+    if(err) throw new Error('XML invalide');
+    parsed = analyze(doc);
+    xmlPreview.textContent = text.slice(0, 4000) + (text.length>4000? "\n…(tronqué)":"");
+    setStep(2);
+    renderAnalysis(parsed);
+  }
+
+  // Événements
+  q('#manifestFile').addEventListener('change', async (e)=>{
+    const f = e.target.files[0];
+    if(!f) return;
+    const txt = await f.text();
+    processManifest(txt).catch(ex=>{
+      analysisEl.innerHTML = '<span style="color:#b00020">Erreur: '+ex.message+'</span>';
+    });
+  });
+
+  q('#btnFetch').addEventListener('click', async ()=>{
+    const url = q('#manifestUrl').value.trim();
+    if(!url){ alert('Saisis une URL'); return; }
+    analysisEl.textContent = 'Téléchargement…';
+    try{
+      const txt = await loadFromUrl(url);
+      processManifest(txt);
+    }catch(ex){
+      analysisEl.innerHTML = '<span style="color:#b00020">Téléchargement/parse impossible : '+ex.message+'</span>';
+    }
+  });
+
+  q('#btnSimDeploy').addEventListener('click', ()=>{
+    const scope = document.querySelector('input[name="scope"]:checked').value;
+    const mode = document.querySelector('input[name="mode"]:checked').value;
+    const when = new Date().toLocaleString();
+    localStorage.setItem('deploySim', JSON.stringify({scope,mode,when, id: parsed?.summary?.Id||''}));
+    q('#deployMsg').textContent = `Déploiement simulé (${scope}, ${mode}) — ${when}`;
+    setStep(4);
+  });
+
+  // Valeur par défaut (ex : manifeste sur GitHub RAW) — optionnel
+  // q('#manifestUrl').value = 'https://raw.githubusercontent.com/<user>/<repo>/<branch>/path/manifest.xml';
+</script>
+</body>
+</html>
+``
