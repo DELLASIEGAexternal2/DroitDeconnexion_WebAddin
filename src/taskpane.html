@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>BDF – Droit Déconnexion</title>
+  <link rel="stylesheet" href="taskpane.css">
+</head>
+
+<body>
+
+  <h1>BDF Droit Déconnexion</h1>
+
+  <!-- PARAMÈTRES UTILISATEUR -->
+  <div class="settings">
+    <label>
+      <input type="checkbox" id="enableAddon">
+      Activer le complément
+    </label>
+
+    <div class="hours">
+      <label>
+        Heure de début :
+        <input type="time" id="startTime">
+      </label>
+
+      <label>
+        Heure de fin :
+        <input type="time" id="endTime">
+      </label>
+
+      <button id="saveSettings">Sauvegarder</button>
+    </div>
+
+    <p class="manual-link">
+      <a href="../docs/manuel.html" target="_blank">
+        Accéder au manuel utilisateur
+      </a>
+    </p>
+  </div>
+
+  <!-- ALERTE -->
+  <div class="alert-box" id="alertBox">
+    <p>
+      Ce courriel va être envoyé en dehors des heures ouvrables de travail.
+    </p>
+    <p>
+      Ne préférez-vous pas procéder à un envoi différé ?
+    </p>
+    <p class="small">
+      [Oui] pour un envoi différé à la prochaine ouverture de la messagerie Outlook
+      pendant les heures ouvrables.<br>
+      [Non] pour envoyer le message maintenant.
+    </p>
+  </div>
+
+  <!-- BOUTONS -->
+  <div class="buttons">
+    <button id="btnOui">Oui</button>
+    <button id="btnNon">Non</button>
+    <button id="btnAnnuler">Annuler</button>
+  </div>
+
+  <script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
+  <script src="taskpane.js"></script>
+</body>
+</html>
