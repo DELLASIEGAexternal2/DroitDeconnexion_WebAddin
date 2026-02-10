@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OfficeApp
+  xmlns="http://schemas.microsoft.com/office/appforoffice/1.1"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:bt="http://schemas.microsoft.com/office/officeappbasictypes/1.0"
+  xmlns:ov="http://schemas.microsoft.com/office/mailappversionoverrides/1.1"
+  xsi:type="MailApp">
+
+  <Id>aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee</Id>
+  <Version>1.0.0.0</Version>
+  <ProviderName>BDF</ProviderName>
+  <DefaultLocale>fr-FR</DefaultLocale>
+
+  <DisplayName DefaultValue="Droit Déconnexion"/>
+  <Description DefaultValue="Complément Outlook — Droit à la déconnexion"/>
+
+  <!-- Icônes -->
+  <IconUrl DefaultValue="https://dellasiega101.github.io/DroitDeconnexion_WebAddin/assets/icon-32.png"/>
+  <HighResolutionIconUrl DefaultValue="https://dellasiega101.github.io/DroitDeconnexion_WebAddin/assets/icon-80.png"/>
+
+  <!-- Hôte Outlook -->
+  <Hosts>
+    <Host Name="Mailbox"/>
+  </Hosts>
+
+  <!-- API Outlook -->
+  <Requirements>
+    <Sets>
+      <Set Name="Mailbox" MinVersion="1.8"/>
+    </Sets>
+  </Requirements>
+
+  <!-- Permissions -->
+  <Permissions>ReadItem</Permissions>
+
+  <!-- Domaines autorisés -->
+  <AppDomains>
+    <AppDomain>https://dellasiega101.github.io</AppDomain>
+  </AppDomains>
+
+  <!-- URL Support obligatoire -->
+  <SupportUrl DefaultValue="https://dellasiega101.github.io/DroitDeconnexion_WebAddin"/>
+
+  <!-- Commandes Outlook -->
+  <VersionOverrides xsi:type="ov:VersionOverridesV1_1">
+    <Hosts>
+      <Host xsi:type="ov:MailHost">
+        <DesktopFormFactor>
+          <ExtensionPoint xsi:type="ov:MessageComposeCommandSurface">
+            <OfficeTab id="TabOptions">
+              <Group id="grpDD">
+                <Label resid="grpLabel"/>
+                <Control xsi:type="ov:Button" id="btnDD">
+                  <Label resid="btnLabel"/>
+                  <Icon>
+                    <bt:Image size="16" resid="icon16"/>
+                    <bt:Image size="32" resid="icon32"/>
+                    <bt:Image size="80" resid="icon80"/>
+                  </Icon>
+                  <Action xsi:type="ov:ShowTaskpane">
+                    <SourceLocation resid="taskpaneUrl"/>
+                  </Action>
+                </Control>
+              </Group>
+            </OfficeTab>
+          </ExtensionPoint>
+        </DesktopFormFactor>
+      </Host>
+    </Hosts>
+
+    <Resources>
+
+      <!-- Icônes -->
+      <bt:Images>
+        <bt:Image id="icon16" DefaultValue="https://dellasiega101.github.io/DroitDeconnexion_WebAddin/assets/icon-16.png"/>
+        <bt:Image id="icon32" DefaultValue="https://dellasiega101.github.io/DroitDeconnexion_WebAddin/assets/icon-32.png"/>
+        <bt:Image id="icon80" DefaultValue="https://dellasiega101.github.io/DroitDeconnexion_WebAddin/assets/icon-80.png"/>
+      </bt:Images>
+
+      <!-- URL Taskpane -->
+      <bt:Urls>
+        <bt:Url id="taskpaneUrl" DefaultValue="https://dellasiega101.github.io/DroitDeconnexion_WebAddin/src/taskpane.html"/>
+      </bt:Urls>
+
+      <!-- Labels -->
+      <bt:ShortStrings>
+        <bt:String id="grpLabel" DefaultValue="Envoi différé"/>
+        <bt:String id="btnLabel" DefaultValue="Droit Déconnexion"/>
+      </bt:ShortStrings>
+
+    </Resources>
+  </VersionOverrides>
+</OfficeApp>

@@ -1,0 +1,16 @@
+{
+  "name": "droitdeconnexion_webaddin",
+  "version": "1.0.0",
+  "description": "package.json",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "start":"echo Application started",
+    "build": "echo Build OK",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "DELLASIEGA Primo Sylvestre",
+  "license": "ISC"
+}
