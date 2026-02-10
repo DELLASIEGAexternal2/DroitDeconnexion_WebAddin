@@ -1,69 +1,85 @@
 body {
   font-family: Segoe UI, Arial, sans-serif;
-  background: var(--bg-color);
+  background-color: #ffffff;
   margin: 0;
-  padding: 14px;
-  color: var(--text-color);
+  padding: 10px;
   font-size: 13px;
 }
 
 /* TITRE */
 h1 {
-  font-size: 16px;
-  margin-bottom: 12px;
+  font-size: 15px;
+  margin-bottom: 10px;
 }
 
-/* BLOCS (settings et alert-box partagent les mêmes styles Fluent) */
+/* -------- BLOCS GÉNÉRAUX -------- */
+
 .settings,
 .alert-box {
-  border-radius: 14px;
-  padding: 14px;
-  margin-bottom: 18px;
-  background: var(--box-bg);
+  border-radius: 12px;                /* Bordures arrondies */
+  padding: 10px;
+  margin-bottom: 15px;
 
-  border: 1px solid rgba(0, 90, 255, 0.5);
+  /* Bordure bleue “orbe” + ombre rouge légère */
+  border: 1px solid rgba(0, 90, 255, 0.6);
+  background: linear-gradient(
+    145deg,
+    #fdfdfd,
+    #f3f7ff
+  );
+
+  /* Halo bleu + lueur rougeâtre */
   box-shadow:
-    var(--shadow-blue),
-    var(--shadow-red);
+    0 0 8px rgba(0, 110, 255, 0.4),    /* halo bleu */
+    0 0 4px rgba(255, 0, 0, 0.25);     /* lueur rouge */
 }
+
+/* -------- PARAMÈTRES -------- */
 
 .hours {
   margin-top: 6px;
 }
+
 .hours label {
   margin-right: 10px;
 }
+
 .manual-link {
   margin-top: 6px;
 }
 
+/* -------- ALERTE -------- */
+
 .alert-box p {
   margin: 5px 0;
 }
+
 .alert-box .small {
   font-size: 12px;
-  opacity: 0.75;
+  color: #333;
 }
 
-/* BOUTONS STYLE FLUENT UI */
+/* -------- BOUTONS -------- */
+
 .buttons {
   text-align: right;
 }
 
 button {
-  min-width: 85px;
+  min-width: 80px;
   padding: 6px 12px;
   margin-left: 6px;
+  font-family: Segoe UI, Arial;
 
+  border: 1px solid #d0d0d0;
   border-radius: 6px;
-  border: 1px solid #c5c5c5;
-  background: #fafafa;
+  background-color: #fafafa;
 
   transition: 0.2s ease;
 }
 
 button:hover {
-  background: var(--accent-blue-light);
-  border-color: var(--accent-blue);
-  box-shadow: 0 0 6px rgba(0, 100, 240, 0.4);
+  background-color: #e8f1ff;
+  border-color: #0078d7;
+  box-shadow: 0 0 6px rgba(0, 120, 215, 0.4);
 }
