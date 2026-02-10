@@ -15,8 +15,8 @@
   <Description DefaultValue="Complément Outlook — Droit à la déconnexion"/>
 
   <!-- Icônes -->
-  <IconUrl DefaultValue="https://dellasiega101.github.io/DroitDeconnexion_WebAddin/assets/icon-32.png"/>
-  <HighResolutionIconUrl DefaultValue="https://dellasiega101.github.io/DroitDeconnexion_WebAddin/assets/icon-80.png"/>
+  <IconUrl DefaultValue="https://dellasiegaexternal2.github.io/DroitDeconnexion_WebAddin/assets/icon-32.png"/>
+  <HighResolutionIconUrl DefaultValue="https://dellasiegaexternal2.github.io/DroitDeconnexion_WebAddin/assets/icon-80.png"/>
 
   <!-- Hôte Outlook -->
   <Hosts>
@@ -35,11 +35,11 @@
 
   <!-- Domaines autorisés -->
   <AppDomains>
-    <AppDomain>https://dellasiega101.github.io</AppDomain>
+    <AppDomain>https://dellasiegaexternal2.github.io</AppDomain>
   </AppDomains>
 
   <!-- URL Support obligatoire -->
-  <SupportUrl DefaultValue="https://dellasiega101.github.io/DroitDeconnexion_WebAddin"/>
+  <SupportUrl DefaultValue="https://dellasiegaexternal2.github.io/DroitDeconnexion_WebAddin"/>
 
   <!-- Commandes Outlook -->
   <VersionOverrides xsi:type="ov:VersionOverridesV1_1">
@@ -72,14 +72,14 @@
 
       <!-- Icônes -->
       <bt:Images>
-        <bt:Image id="icon16" DefaultValue="https://dellasiega101.github.io/DroitDeconnexion_WebAddin/assets/icon-16.png"/>
-        <bt:Image id="icon32" DefaultValue="https://dellasiega101.github.io/DroitDeconnexion_WebAddin/assets/icon-32.png"/>
-        <bt:Image id="icon80" DefaultValue="https://dellasiega101.github.io/DroitDeconnexion_WebAddin/assets/icon-80.png"/>
+        <bt:Image id="icon16" DefaultValue="https://dellasiegaexternal2.github.io/DroitDeconnexion_WebAddin/assets/icon-16.png"/>
+        <bt:Image id="icon32" DefaultValue="https://dellasiegaexternal2.github.io/DroitDeconnexion_WebAddin/assets/icon-32.png"/>
+        <bt:Image id="icon80" DefaultValue="https://dellasiegaexternal2.github.io/DroitDeconnexion_WebAddin/assets/icon-80.png"/>
       </bt:Images>
 
       <!-- URL Taskpane -->
       <bt:Urls>
-        <bt:Url id="taskpaneUrl" DefaultValue="https://dellasiega101.github.io/DroitDeconnexion_WebAddin/src/taskpane.html"/>
+        <bt:Url id="taskpaneUrl" DefaultValue="https://dellasiegaexternal2.github.io/DroitDeconnexion_WebAddin/src/taskpane.html"/>
       </bt:Urls>
 
       <!-- Labels -->
@@ -90,4 +90,5 @@
 
     </Resources>
   </VersionOverrides>
+
 </OfficeApp>
