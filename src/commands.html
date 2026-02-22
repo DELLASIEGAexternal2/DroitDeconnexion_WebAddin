@@ -8,27 +8,25 @@
     <script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
 
     <script>
-        Office.onReady(function () {
-            console.log("Office ready");
-        });
+Office.onReady(function () {});
 
-        function action(event) {
-            Office.context.mailbox.item.notificationMessages.replaceAsync(
-                "actionNotification",
-                {
-                    type: Office.MailboxEnums.ItemNotificationMessageType.InformationalMessage,
-                    message: "Action exécutée avec succès.",
-                    icon: "Icon.80x80",
-                    persistent: false
-                }
-            );
+function openDialog(event) {
 
-            event.completed();
+    Office.context.ui.displayDialogAsync(
+        "https://dellasiegaexternal2.github.io/DroitDeconnexion_WebAddin/src/dialog.html",
+        { height: 60, width: 40, displayInIframe: true },
+        function (result) {
+            if (result.status === Office.AsyncResultStatus.Failed) {
+                console.log(result.error.message);
+            }
         }
+    );
 
-        // Expose function globally
-        window.action = action;
-    </script>
+    event.completed();
+}
+
+window.openDialog = openDialog;
+</script>
 </head>
 <body>
 </body>
