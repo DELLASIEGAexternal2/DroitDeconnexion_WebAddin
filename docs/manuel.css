@@ -1,41 +1,116 @@
-body {
-  font-family: Segoe UI, Arial, sans-serif;
-  background-color: #ffffff;
-  margin: 0;
-  padding: 20px;
-  font-size: 14px;
-  color: #000;
+/* ================================
+   Thème "Papyrus égyptien"
+   Auteur : M365 Copilot
+   ================================ */
+
+/* ---------- Variables thème ---------- */
+:root{
+  --papyrus-bg-1: #f3e6c1;     /* base parchemin */
+  --papyrus-bg-2: #ead8a0;     /* nuance fibres */
+  --papyrus-fiber: rgba(120,86,30,0.10);
+  --ink: #2b2723;              /* encre brune/noire */
+  --ink-soft: #4a4037;
+  --accent-blue: #1d72aa;      /* bleu égyptien */
+  --accent-gold: #b98a2c;      /* dorure */
+  --red-ochre: #b24e2f;
+  --edge-burn: rgba(0,0,0,0.18);
+  --shadow: 0 6px 18px rgba(0,0,0,0.18);
+  --paper-radius: 12px;
+  --maxw: 880px;
 }
 
-.container {
-  max-width: 800px;
+/* ---------- Reset doux ---------- */
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+html, body {
+  height: 100%;
 }
 
-h1 {
-  font-size: 22px;
-  margin-bottom: 5px;
-}
-
-h2 {
-  font-size: 18px;
-  margin-bottom: 20px;
-  color: #444;
-}
-
-h3 {
+body{
+  margin:0;
+  color: var(--ink);
   font-size: 16px;
-  margin-top: 20px;
-  margin-bottom: 5px;
+  line-height: 1.7;
+  /* Police : Papyrus si dispo, sinon belles sérif élégantes */
+  font-family: Papyrus, "Cormorant Garamond", "EB Garamond", "Times New Roman", serif;
+
+  /* Fond parchemin avec vignettage léger */
+  background:
+    radial-gradient(1200px 600px at 50% -10%, rgba(255,255,255,0.3), transparent 60%),
+    radial-gradient(1200px 600px at 50% 110%, rgba(0,0,0,0.08), transparent 60%),
+    linear-gradient(120deg, var(--papyrus-bg-1), var(--papyrus-bg-2));
 }
 
-section {
-  margin-bottom: 15px;
+/* Texture fibres de papyrus (bruit + stries) */
+body::before{
+  content:"";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background:
+    /* stries verticales très fines */
+    repeating-linear-gradient(90deg,
+      transparent 0 3px,
+      var(--fiber-line, rgba(120,86,30,0.04)) 3px 3.5px),
+    /* grain */
+    url("data:image/svg+xml;utf8,\
+<svg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'>\
+  <filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/><feComponentTransfer><feFuncA type='table' tableValues='0 0.08'/></feComponentTransfer></filter>\
+  <rect width='100%' height='100%' filter='url(%23n)' fill='rgba(0,0,0,0.1)'/>\
+</svg>") repeat;
+  opacity: .55;
 }
 
-ul {
-  margin-left: 20px;
+/* ---------- Conteneur principal (feuillet) ---------- */
+.container{
+  max-width: var(--maxw);
+  margin: clamp(16px, 4vw, 40px) auto;
+  padding: clamp(18px, 3.2vw, 34px);
+  background: linear-gradient(180deg, rgba(255,255,255,0.35), rgba(255,255,255,0.08)) padding-box,
+              linear-gradient(180deg, rgba(255,255,255,0.4), rgba(0,0,0,0.06)) border-box;
+  border: 2px solid transparent;
+  border-radius: var(--paper-radius);
+
+  /* Bords "brûlés" + ombre */
+  box-shadow:
+    inset 0 0 0 1px rgba(0,0,0,0.05),
+    0 10px 26px rgba(0,0,0,0.20);
+  position: relative;
 }
 
-p {
-  line-height: 1.5;
+/* Décoration : frise hiéroglyphique (haut/bas) */
+.container::before,
+.container::after{
+  content:"𓇼 𓇳 𓋴 𓁹 𓏏 𓂀 𓅓 𓂝 𓆣 𓍯 𓏠 𓂧 𓃭 𓆑 𓏤";
+  font-family: "Noto Sans Egyptian Hieroglyphs", "Segoe UI Symbol", "Arial Unicode MS", sans-serif;
+  letter-spacing: .2em;
+  display: block;
+  text-align: center;
+  color: var(--ink-soft);
+  opacity: .55;
+  font-size: clamp(10px, 2vw, 14px);
 }
+.container::before{ margin-bottom: .8rem; }
+.container::after{ margin-top: .8rem; }
+
+/* ---------- Titres ---------- */
+h1,h2,h3{
+  margin: 0 0 .4rem;
+  color: var(--ink);
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  font-weight: 700;
+}
+
+/* Effet cartouche pour H1 */
+h1{
+  font-size: clamp(26px, 4vw, 36px);
+  display: inline-block;
+  padding: .45rem .9rem;
+  border: 2px solid var(--accent-gold);
+  border-radius: 999px/40px; /* ovale type cartouche */
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.35), rgba(255,255,255,0.05));
+  box-shadow: 0 3px 0 rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.4);
