@@ -1,116 +1,237 @@
 /* ================================
-   Thème "Papyrus égyptien"
+   Thème "Papyrus égyptien" – Palette Banque de France
+   Effet : Fenêtre dans la page + Ombre élégante
    Auteur : M365 Copilot
    ================================ */
 
-/* ---------- Variables thème ---------- */
+/* ---------- Variables palette & mise en page ---------- */
 :root{
-  --papyrus-bg-1: #f3e6c1;     /* base parchemin */
-  --papyrus-bg-2: #ead8a0;     /* nuance fibres */
-  --papyrus-fiber: rgba(120,86,30,0.10);
-  --ink: #2b2723;              /* encre brune/noire */
-  --ink-soft: #4a4037;
-  --accent-blue: #1d72aa;      /* bleu égyptien */
-  --accent-gold: #b98a2c;      /* dorure */
-  --red-ochre: #b24e2f;
-  --edge-burn: rgba(0,0,0,0.18);
-  --shadow: 0 6px 18px rgba(0,0,0,0.18);
-  --paper-radius: 12px;
-  --maxw: 880px;
+  /* Bleu Banque de France (référence proche) */
+  --bdf-blue: #0C3C78;         /* principal (≈ Banque de France) */
+  --bdf-blue-dark: #072B56;    /* foncé pour contrastes */
+  --bdf-blue-light: #3b6aa6;   /* clair pour filets */
+  --gold-soft: #bfa35a;        /* dorure discrète */
+  --ink: #222;                 /* texte */
+  --paper-1: #f6f2e7;          /* page */
+  --paper-2: #efe8d7;          /* nuance page */
+  --panel-bg: rgba(255,255,255,0.65); /* fenêtre */
+  --edge: rgba(0,0,0,0.06);    /* bords */
+  --maxw: 900px;
+  --radius: 14px;
+  --shadow-1: 0 8px 18px rgba(7,43,86,0.18);
+  --shadow-2: 0 2px 8px rgba(0,0,0,0.08);
 }
 
-/* ---------- Reset doux ---------- */
+/* Reset doux */
 *,
 *::before,
-*::after { box-sizing: border-box; }
+*::after{ box-sizing: border-box; }
 
-html, body {
-  height: 100%;
-}
+html, body{ height:100%; }
 
 body{
   margin:0;
   color: var(--ink);
   font-size: 16px;
   line-height: 1.7;
-  /* Police : Papyrus si dispo, sinon belles sérif élégantes */
   font-family: Papyrus, "Cormorant Garamond", "EB Garamond", "Times New Roman", serif;
 
-  /* Fond parchemin avec vignettage léger */
+  /* Page parchemin très clair */
   background:
-    radial-gradient(1200px 600px at 50% -10%, rgba(255,255,255,0.3), transparent 60%),
-    radial-gradient(1200px 600px at 50% 110%, rgba(0,0,0,0.08), transparent 60%),
-    linear-gradient(120deg, var(--papyrus-bg-1), var(--papyrus-bg-2));
+    radial-gradient(1200px 600px at 50% -10%, rgba(255,255,255,0.35), transparent 60%),
+    radial-gradient(1200px 600px at 50% 110%, rgba(0,0,0,0.05), transparent 60%),
+    linear-gradient(120deg, var(--paper-1), var(--paper-2));
 }
 
-/* Texture fibres de papyrus (bruit + stries) */
+/* Fibres légères */
 body::before{
   content:"";
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
+  position: fixed; inset: 0; pointer-events:none;
   background:
-    /* stries verticales très fines */
-    repeating-linear-gradient(90deg,
-      transparent 0 3px,
-      var(--fiber-line, rgba(120,86,30,0.04)) 3px 3.5px),
-    /* grain */
+    repeating-linear-gradient(90deg, transparent 0 3px, rgba(120,86,30,0.03) 3px 3.5px),
     url("data:image/svg+xml;utf8,\
 <svg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'>\
-  <filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/><feComponentTransfer><feFuncA type='table' tableValues='0 0.08'/></feComponentTransfer></filter>\
-  <rect width='100%' height='100%' filter='url(%23n)' fill='rgba(0,0,0,0.1)'/>\
+  <filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/><feComponentTransfer><feFuncA type='table' tableValues='0 0.06'/></feComponentTransfer></filter>\
+  <rect width='100%' height='100%' filter='url(%23n)' fill='rgba(0,0,0,0.10)'/>\
 </svg>") repeat;
-  opacity: .55;
+  opacity:.42;
 }
 
-/* ---------- Conteneur principal (feuillet) ---------- */
+/* ---------- Fenêtre/encart principal ---------- */
 .container{
   max-width: var(--maxw);
-  margin: clamp(16px, 4vw, 40px) auto;
-  padding: clamp(18px, 3.2vw, 34px);
-  background: linear-gradient(180deg, rgba(255,255,255,0.35), rgba(255,255,255,0.08)) padding-box,
-              linear-gradient(180deg, rgba(255,255,255,0.4), rgba(0,0,0,0.06)) border-box;
-  border: 2px solid transparent;
-  border-radius: var(--paper-radius);
+  margin: clamp(18px, 4.5vw, 48px) auto;
+  padding: clamp(20px, 3.2vw, 36px);
 
-  /* Bords "brûlés" + ombre */
+  /* Effet “fenêtre” : fond satiné + double bordure verre */
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.75), rgba(255,255,255,0.55)) padding-box,
+    linear-gradient(180deg, rgba(255,255,255,0.9), rgba(7,43,86,0.08)) border-box;
+  border: 1.5px solid transparent;
+  border-radius: var(--radius);
+
+  /* Liseré interne subtil + ombres */
   box-shadow:
-    inset 0 0 0 1px rgba(0,0,0,0.05),
-    0 10px 26px rgba(0,0,0,0.20);
+    inset 0 0 0 1px rgba(255,255,255,0.7),
+    var(--shadow-1),
+    var(--shadow-2);
   position: relative;
 }
 
-/* Décoration : frise hiéroglyphique (haut/bas) */
+/* Fine frise hiéroglyphique (bleu adouci) */
 .container::before,
 .container::after{
-  content:"𓇼 𓇳 𓋴 𓁹 𓏏 𓂀 𓅓 𓂝 𓆣 𓍯 𓏠 𓂧 𓃭 𓆑 𓏤";
+  content:"𓇼 𓇳 𓁹 𓂀 𓏏 𓆣 𓍯";
   font-family: "Noto Sans Egyptian Hieroglyphs", "Segoe UI Symbol", "Arial Unicode MS", sans-serif;
-  letter-spacing: .2em;
-  display: block;
-  text-align: center;
-  color: var(--ink-soft);
-  opacity: .55;
-  font-size: clamp(10px, 2vw, 14px);
+  display:block; text-align:center; opacity:.45;
+  letter-spacing:.22em; color: var(--bdf-blue);
+  font-size: clamp(9px,1.6vw,12px);
 }
-.container::before{ margin-bottom: .8rem; }
-.container::after{ margin-top: .8rem; }
+.container::before{ margin-bottom:.6rem; }
+.container::after{ margin-top:.6rem; }
 
 /* ---------- Titres ---------- */
 h1,h2,h3{
-  margin: 0 0 .4rem;
-  color: var(--ink);
+  margin:0 0 .4rem;
   text-transform: uppercase;
-  letter-spacing: .08em;
+  letter-spacing:.07em;
+  color: var(--bdf-blue-dark);
   font-weight: 700;
 }
 
-/* Effet cartouche pour H1 */
+/* H1 en cartouche bleu profond avec filet or doux */
 h1{
   font-size: clamp(26px, 4vw, 36px);
-  display: inline-block;
-  padding: .45rem .9rem;
-  border: 2px solid var(--accent-gold);
-  border-radius: 999px/40px; /* ovale type cartouche */
+  display:inline-block;
+  padding:.5rem 1rem;
+  border-radius: 999px/44px;
   background:
-    linear-gradient(180deg, rgba(255,255,255,0.35), rgba(255,255,255,0.05));
-  box-shadow: 0 3px 0 rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.4);
+    linear-gradient(180deg, rgba(255,255,255,0.65), rgba(255,255,255,0.15));
+  border: 1.8px solid var(--bdf-blue);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.7),
+    0 2px 0 rgba(7,43,86,0.12);
+  position: relative;
+}
+h1::after{
+  content:"";
+  position:absolute; inset: -3px;
+  border-radius: inherit;
+  border: 1px solid rgba(191,163,90,0.35); /* doré doux */
+  pointer-events:none;
+}
+
+/* H2 souligné bleu avec filets dorés très discrets */
+h2{
+  font-size: clamp(18px, 2.4vw, 24px);
+  padding-bottom:.35rem;
+  position: relative;
+}
+h2::after{
+  content:"";
+  position:absolute; left:0; right:0; bottom:0;
+  height:3px; border-radius:2px;
+  background:
+    linear-gradient(90deg, transparent, #bfa35a55 10%, var(--bdf-blue) 50%, #bfa35a55 90%, transparent);
+}
+
+/* H3 marqueur bleu */
+h3{
+  font-size: clamp(16px, 2vw, 20px);
+  color: var(--bdf-blue-dark);
+  padding-left: .9rem; position: relative;
+}
+h3::before{
+  content:"𓋹"; /* ankh */
+  font-family: "Noto Sans Egyptian Hieroglyphs", "Segoe UI Symbol", "Arial Unicode MS", sans-serif;
+  position:absolute; left:0; top:0; transform: translateY(8%);
+  color: var(--bdf-blue-light);
+}
+
+/* ---------- Sections & texte ---------- */
+section{
+  margin: 1.1rem 0 1.2rem;
+  padding:.6rem .4rem;
+  border-left: 3px solid rgba(7,43,86,0.12);
+  background: linear-gradient(180deg, rgba(255,255,255,0.35), rgba(255,255,255,0.08));
+  border-radius: 8px;
+}
+p{ margin:.5rem 0; text-align: justify; hyphens:auto; }
+
+/* Lettrine bleue */
+section p:first-of-type::first-letter{
+  font-size: 2.7em; line-height:.9;
+  float:left; margin-right:.18em; padding:.12em .18em .02em .02em;
+  color: var(--bdf-blue);
+  text-shadow: 0 1px 0 rgba(255,255,255,0.55);
+  font-weight:700;
+}
+
+/* Listes aux puces hiéroglyphiques bleues */
+ul{ margin:.4rem 0 .8rem 1.2rem; padding:0; list-style:none; }
+ul li{ position:relative; padding-left:1.35rem; margin:.35rem 0; }
+ul li::before{
+  content:"𓂀";
+  font-family:"Noto Sans Egyptian Hieroglyphs","Segoe UI Symbol","Arial Unicode MS",sans-serif;
+  position:absolute; left:0; top:0; color: var(--bdf-blue-light); opacity:.9;
+}
+
+/* Liens */
+a{
+  color: var(--bdf-blue);
+  text-decoration: none;
+  border-bottom: 1px dashed currentColor;
+}
+a:hover{
+  color: var(--bdf-blue-dark);
+  border-bottom-style: solid;
+}
+
+/* Encarts astuce / attention (fenêtres secondaires) */
+.tip, .warning{
+  padding:.75rem .9rem; border-radius: 12px; margin:.8rem 0;
+  border: 1px solid rgba(7,43,86,0.18);
+  background: linear-gradient(180deg, rgba(255,255,255,.6), rgba(255,255,255,.2));
+  box-shadow: 0 6px 14px rgba(7,43,86,0.12), inset 0 1px 0 rgba(255,255,255,.7);
+}
+.tip::before{
+  content:"𓇌  Astuce";
+  display:block; font-weight:700; color: var(--bdf-blue);
+  margin-bottom:.25rem;
+}
+.warning{
+  border-color: rgba(191, 90, 90, 0.35);
+}
+.warning::before{
+  content:"𓄤  Attention";
+  display:block; font-weight:700; color:#9c3a3a; margin-bottom:.25rem;
+}
+
+/* Séparateur décoratif */
+.hr{ display:block; text-align:center; margin:1.2rem auto; color: var(--bdf-blue); opacity:.55; }
+.hr::before{ content:"𓆣 𓇋 𓏏 𓍯 𓆑"; letter-spacing:.25em; }
+
+/* Tables (si besoin) */
+table{
+  width:100%; border-collapse:collapse; margin:.8rem 0 1rem;
+  background: rgba(255,255,255,0.6);
+  border: 1px solid rgba(7,43,86,0.18);
+  box-shadow: 0 2px 6px rgba(7,43,86,0.08);
+}
+th, td{ padding:.6rem .7rem; border-bottom:1px solid rgba(7,43,86,0.12); }
+th{
+  text-align:left; color: var(--bdf-blue-dark);
+  background: linear-gradient(180deg, rgba(12,60,120,0.08), rgba(12,60,120,0.02));
+}
+
+/* Impression */
+@media print{
+  body::before{ opacity:.25; }
+  .container{ box-shadow:none; border:1px solid rgba(0,0,0,0.25); }
+  a{ color: var(--ink); border-bottom: 1px solid var(--ink); }
+}
+
+/* Accessibilité */
+@media (prefers-reduced-motion: reduce){
+  *{ transition: none !important; }
+}
